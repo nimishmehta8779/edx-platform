@@ -346,6 +346,7 @@ class CourseAssignmentDate(DateSummary):
         self.assignment_date = None
         self.assignment_title = None
         self.assignment_title_html = None
+        self.assignment_requires_full_access = None
 
     @property
     def date(self):
@@ -370,6 +371,14 @@ class CourseAssignmentDate(DateSummary):
                 '<a href="{assignment_link}">{assignment_title}</a>'
             ).format(assignment_link=link, assignment_title=title)
         self.assignment_title = title
+
+    @property
+    def requires_full_access(self):
+        return self.assignment_requires_full_access
+
+    @requires_full_access.setter
+    def requires_full_access(self, requires_full_access):
+        self.assignment_requires_full_access = requires_full_access
 
 
 class CourseExpiredDate(DateSummary):
