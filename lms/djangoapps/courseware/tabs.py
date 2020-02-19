@@ -332,7 +332,7 @@ class DatesTab(CourseTab):
         return ENABLE_DATES_TAB.is_enabled(course.id)
 
 
-def get_course_tab_list(request, course):
+def get_course_tab_list(user, course):
     """
     Retrieves the course tab list from xmodule.tabs and manipulates the set as necessary
     """

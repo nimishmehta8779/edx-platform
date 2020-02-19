@@ -58,9 +58,10 @@ from openedx.core.djangolib.markup import HTML, Text
                             <div class="timeline-description">
                                 ${block.description}
                                 % if verified and verified_upgrade_link:
-                                    ${Text(_('{a_start}Upgrade{a_end} to a Verified Certificate for full access.')).format(
+                                    ${Text(_('{a_start}Upgrade{a_end}{space}to a Verified Certificate for full access.')).format(
                                         a_start=HTML('<a href={link}>').format(link=verified_upgrade_link),
                                         a_end=HTML('</a>'),
+                                        space=HTML('&nbsp'),
                                     )}
                                 % endif
                             </div>

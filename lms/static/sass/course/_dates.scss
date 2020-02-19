@@ -15,7 +15,7 @@
     border-left: solid 1px #2d323e;
     color: #2d323e;
     position: relative;
-    padding-left: 1em;
+    padding-left: 18px;
     margin-left: 6px;
 
     &:last-of-type {
@@ -43,12 +43,12 @@
     display: flex;
     flex-wrap: wrap;
     position: relative;
-    top: -9px;
+    top: -7px;
     padding-bottom: 37px;
     flex: 100%;
 
     &.active {
-      top: -1px;
+      top: -3px;
       padding-bottom: 33px;
     }
   }
@@ -60,6 +60,7 @@
     flex: 100%;
     font-weight: bold;
     margin-bottom: 4px;
+    align-items: center;
   }
 
   .timeline-title {
@@ -91,7 +92,7 @@
   .pill {
     @include font-size(12);
 
-    padding: 4px 8px 4px 8px;
+    padding: 2px 8px 2px 8px;
     border-radius: 5px;
     margin-left: 4px;
     font-style: italic;
