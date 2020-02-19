@@ -25,13 +25,14 @@ from openedx.core.djangolib.markup import HTML, Text
                 <h2 class="hd hd-2 date-title">
                     ${_("Important Dates")}
                 </h2>
-                % for block in course_date_blocks:
+                % for block, next in zip(course_date_blocks, course_date_blocks[1:]):
                     <% active = 'active' if block.date and (block.date.strftime(block.date_format) == block.current_time.strftime(block.date_format)) else '' %>
                     <% verified = hasattr(block, 'requires_full_access') and block.requires_full_access %>
                     <% is_assignment = isinstance(block, CourseAssignmentDate) %>
+                    <% next_is_active = 'next-is-active' if next.date and (next.date.strftime(next.date_format) == next.current_time.strftime(next.date_format)) else '' %>
                     <div class="timeline-item ${active}">
                         <div class="date-circle ${active}"></div>
-                        <div class="date-content ${active}">
+                        <div class="date-content ${active} ${next_is_active}">
                             <div class="timeline-date-content">
                                     % if block.date:
                                         <div class="timeline-date">
@@ -40,7 +41,7 @@ from openedx.core.djangolib.markup import HTML, Text
                                         % if active:
                                             <div class="pill due">${_('Due Today')}</div>
                                         % endif
-                                        % if verified:
+                                        % if verified and not learner_is_verified:
                                             <div class="pill verified"><span class="fa fa-lock verified-icon" aria-hidden="true"></span>${_('Verified Only')}</div>
                                         % endif
                                     % endif
@@ -57,7 +58,7 @@ from openedx.core.djangolib.markup import HTML, Text
                             </div>
                             <div class="timeline-description">
                                 ${block.description}
-                                % if verified and verified_upgrade_link:
+                                % if verified and verified_upgrade_link and not learner_is_verified:
                                     ${Text(_('{a_start}Upgrade{a_end}{space}to a Verified Certificate for full access.')).format(
                                         a_start=HTML('<a href={link}>').format(link=verified_upgrade_link),
                                         a_end=HTML('</a>'),

@@ -6,8 +6,8 @@
   .date-title {
     color: #414141;
     font-weight: 500;
-    margin-bottom: 1em;
-    padding-bottom: 1em;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
     border-bottom: 0;
   }
 
@@ -44,12 +44,17 @@
     flex-wrap: wrap;
     position: relative;
     top: -7px;
-    padding-bottom: 37px;
     flex: 100%;
+    line-height: 1.25;
+    padding-bottom: 39px;
 
     &.active {
       top: -3px;
-      padding-bottom: 33px;
+      padding-bottom: 42px;
+    }
+
+    &.next-is-active {
+      padding-bottom: 35px;
     }
   }
 
@@ -59,7 +64,7 @@
     display: flex;
     flex: 100%;
     font-weight: bold;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
     align-items: center;
   }
 
@@ -68,8 +73,9 @@
 
     display: flex;
     flex: 100%;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
     font-weight: bold;
+    line-height: 1.25;
 
     a {
       color: #2d323e;
@@ -82,6 +88,7 @@
 
     display: flex;
     flex: 100%;
+    line-height: 1.25;
 
     a {
       color: #2d323e;
@@ -94,7 +101,7 @@
 
     padding: 2px 8px 2px 8px;
     border-radius: 5px;
-    margin-left: 4px;
+    margin-left: 8px;
     font-style: italic;
     font-weight: bold;
     vertical-align: top;
