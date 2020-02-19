@@ -18,8 +18,6 @@ from django.urls import reverse
 from django.utils.translation import ugettext as _
 from edx_django_utils.monitoring import function_trace
 from edx_when.api import get_dates_for_course
-from django.utils.translation import ugettext as _
-from edx_when.api import get_dates_for_course
 from fs.errors import ResourceNotFound
 from opaque_keys.edx.keys import UsageKey
 from path import Path as path
@@ -432,7 +430,8 @@ def date_block_key_fn(block):
     return block.date or datetime.max.replace(tzinfo=pytz.UTC)
 
 
-def get_course_assignment_due_dates(course, user, request, num_return=None, include_past_dates=False, include_access=False):
+def get_course_assignment_due_dates(course, user, request, num_return=None,
+                                    include_past_dates=False, include_access=False):
     """
     Returns a list of assignment (at the subsection/sequential level) due date
     blocks for the given course. Will return num_return results or all results
@@ -454,10 +453,12 @@ def get_course_assignment_due_dates(course, user, request, num_return=None, incl
                         child_block = store.get_item(child_block_key)
                         # If group_access is set on the block, and the content gating is
                         # only full access, set the value on the CourseAssignmentDate object
-                        if (child_block.group_access and child_block.group_access.get(CONTENT_GATING_PARTITION_ID) == [
-                            settings.CONTENT_TYPE_GATE_GROUP_IDS['full_access']
-                        ]):
-                            date_block.requires_full_access = True
+                        date_block.requires_full_access = (
+                            child_block.group_access and
+                            child_block.group_access.get(CONTENT_GATING_PARTITION_ID) == [
+                                settings.CONTENT_TYPE_GATE_GROUP_IDS['full_access']
+                            ]
+                        )
 
                 block_url = None
                 now = datetime.now().replace(tzinfo=pytz.UTC)
