@@ -38,12 +38,6 @@ matplotlib<3.1
 # mysqlclient 1.5 is scheduled to change internal APIs used by Django 1.11
 mysqlclient<1.5
 
-# Bumping requests-oauthlib to 1.2 updates oauthlib to 3.0.0, which changes a response code in certain cases
-# This causes a test to fail. Before fixing, we would need to make sure mobile apps are functional with this change
-# See https://github.com/oauthlib/oauthlib/issues/264 for more context
-requests-oauthlib==1.1.0
-oauthlib==2.1.0
-
 # Version 0.23.0 requires python-dateuil>=2.5.0
 pandas==0.22.0
 
