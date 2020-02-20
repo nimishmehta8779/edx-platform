@@ -448,17 +448,7 @@ def get_course_assignment_due_dates(course, user, request, num_return=None,
                 date_block.date = date
 
                 if include_access:
-                    child_block_keys = course_blocks_api.get_course_blocks(user, block_key)
-                    for child_block_key in child_block_keys:
-                        child_block = store.get_item(child_block_key)
-                        # If group_access is set on the block, and the content gating is
-                        # only full access, set the value on the CourseAssignmentDate object
-                        date_block.requires_full_access = (
-                                child_block.group_access and
-                                child_block.group_access.get(CONTENT_GATING_PARTITION_ID) == [
-                                    settings.CONTENT_TYPE_GATE_GROUP_IDS['full_access']
-                                ]
-                        )
+                    date_block.requires_full_access = _requires_full_access(user, block_key)
 
                 block_url = None
                 now = datetime.now().replace(tzinfo=pytz.UTC)
@@ -474,6 +464,21 @@ def get_course_assignment_due_dates(course, user, request, num_return=None,
     if num_return:
         return date_blocks[:num_return]
     return date_blocks
+
+
+def _requires_full_access(user, block_key):
+    store = modulestore()
+    child_block_keys = course_blocks_api.get_course_blocks(user, block_key)
+    requires_full_access = False
+    for child_block_key in child_block_keys:
+        child_block = store.get_item(child_block_key)
+        # If group_access is set on the block, and the content gating is
+        # only full access, set the value on the CourseAssignmentDate object
+        if(child_block.group_access and child_block.group_access.get(CONTENT_GATING_PARTITION_ID) == [
+            settings.CONTENT_TYPE_GATE_GROUP_IDS['full_access']
+        ]):
+            requires_full_access = True
+    return requires_full_access
 
 
 # TODO: Fix this such that these are pulled in as extra course-specific tabs.
