@@ -12,9 +12,7 @@ from textwrap import dedent
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core.management.base import BaseCommand
-from edx_oauth2_provider.models import TrustedClient
-from provider.constants import CONFIDENTIAL
-from provider.oauth2.models import Client
+from oauth2_provider.models import Application
 
 from lms.djangoapps.commerce.models import CommerceConfiguration
 from openedx.core.djangoapps.site_configuration.models import SiteConfiguration
@@ -75,7 +73,7 @@ class Command(BaseCommand):
             service_name=service_name,
             site_name="" if site_name == "edx" else "-{}".format(site_name)
         )
-        client, created = Client.objects.update_or_create(
+        client, created = Application.objects.update_or_create(
             client_id=client_id,
             defaults={
                 "user": service_user,
@@ -83,18 +81,15 @@ class Command(BaseCommand):
                     site_name=site_name,
                     service_name=service_name,
                 ),
-                "url": url,
                 "client_secret": "{service_name}-secret".format(
                     service_name=service_name
                 ),
-                "client_type": CONFIDENTIAL,
-                "redirect_uri": "{url}complete/edx-oidc/".format(url=url),
-                "logout_uri": "{url}logout/".format(url=url)
+                "client_type": Application.CLIENT_CONFIDENTIAL,
+                "authorization_grant_type": Application.GRANT_PASSWORD,
+                "redirect_uris": "{url}complete/edx-oauth2/".format(url=url),
+                "skip_authorization": True,
             }
         )
-        if created:
-            LOG.info(u"Adding {client} oauth2 client as trusted client".format(client=client.name))
-            TrustedClient.objects.get_or_create(client=client)
 
     def _create_sites(self, site_domain, theme_dir_name, site_configuration):
         """
@@ -138,14 +133,14 @@ class Command(BaseCommand):
         These two clients are being created by default without service
         users so we have to associate the service users to them.
         """
-        ecommerce_queryset = Client.objects.filter(redirect_uri=self.ecommerce_oidc_url)
+        ecommerce_queryset = Application.objects.filter(redirect_uris=self.ecommerce_oidc_url)
 
         if ecommerce_queryset:
             ecommerce_client = ecommerce_queryset[0]
             ecommerce_client.user = self.ecommerce_user
             ecommerce_client.save()
 
-        discovery_queryset = Client.objects.filter(redirect_uri=self.discovery_oidc_url)
+        discovery_queryset = Application.objects.filter(redirect_uris=self.discovery_oidc_url)
         if discovery_queryset:
             discovery_client = discovery_queryset[0]
             discovery_client.user = self.discovery_user
@@ -205,15 +200,15 @@ class Command(BaseCommand):
 
         if options['devstack']:
             configuration_prefix = "devstack"
-            self.discovery_oidc_url = "http://discovery-{}.e2e.devstack:18381/complete/edx-oidc/".format(self.dns_name)
+            self.discovery_oidc_url = "http://discovery-{}.e2e.devstack:18381/complete/edx-oauth2/".format(self.dns_name)
             self.discovery_base_url_fmt = "http://discovery-{site_domain}:18381/"
-            self.ecommerce_oidc_url = "http://ecommerce-{}.e2e.devstack:18130/complete/edx-oidc/".format(self.dns_name)
+            self.ecommerce_oidc_url = "http://ecommerce-{}.e2e.devstack:18130/complete/edx-oauth2/".format(self.dns_name)
             self.ecommerce_base_url_fmt = "http://ecommerce-{site_domain}:18130/"
         else:
             configuration_prefix = "sandbox"
-            self.discovery_oidc_url = "https://discovery-{}.sandbox.edx.org/complete/edx-oidc/".format(self.dns_name)
+            self.discovery_oidc_url = "https://discovery-{}.sandbox.edx.org/complete/edx-oauth2/".format(self.dns_name)
             self.discovery_base_url_fmt = "https://discovery-{site_domain}/"
-            self.ecommerce_oidc_url = "https://ecommerce-{}.sandbox.edx.org/complete/edx-oidc/".format(self.dns_name)
+            self.ecommerce_oidc_url = "https://ecommerce-{}.sandbox.edx.org/complete/edx-oauth2/".format(self.dns_name)
             self.ecommerce_base_url_fmt = "https://ecommerce-{site_domain}/"
 
         self.configuration_filename = '{}_configuration.json'.format(configuration_prefix)

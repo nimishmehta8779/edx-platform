@@ -8,9 +8,8 @@ from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core.management import CommandError, call_command
 from django.test import TestCase
-from edx_oauth2_provider.models import TrustedClient
-from provider.oauth2.models import Client
 
+from oauth2_provider.models import Application
 from openedx.core.djangoapps.theming.models import SiteTheme
 from student.models import UserProfile
 
@@ -96,7 +95,8 @@ class TestCreateSiteAndConfiguration(TestCase):
         """
         service_user = self._assert_service_user_is_valid("ecommerce_worker")
 
-        clients = Client.objects.filter(user=service_user)
+        clients = Application.objects.filter(user=service_user)
+
         self.assertEqual(len(clients), len(SITES))
 
         if devstack:
@@ -111,22 +111,13 @@ class TestCreateSiteAndConfiguration(TestCase):
                 site_name=site_name,
                 dns_name=self.dns_name
             )
-            self.assertEqual(client.url, ecommerce_url)
             self.assertEqual(
-                client.redirect_uri,
-                "{ecommerce_url}complete/edx-oidc/".format(ecommerce_url=ecommerce_url)
+                client.redirect_uris,
+                "{ecommerce_url}complete/edx-oauth2/".format(ecommerce_url=ecommerce_url)
             )
             self.assertEqual(
                 client.client_id,
                 "ecommerce-key-{site_name}".format(site_name=site_name)
-            )
-            self.assertEqual(
-                client.client_secret,
-                "ecommerce-secret"
-            )
-            self.assertEqual(
-                len(TrustedClient.objects.filter(client=client)),
-                1
             )
 
     def _assert_discovery_clients_are_valid(self, devstack=False):
@@ -135,7 +126,7 @@ class TestCreateSiteAndConfiguration(TestCase):
         """
         service_user = self._assert_service_user_is_valid("lms_catalog_service_user")
 
-        clients = Client.objects.filter(user=service_user)
+        clients = Application.objects.filter(user=service_user)
 
         self.assertEqual(len(clients), len(SITES))
 
@@ -152,22 +143,13 @@ class TestCreateSiteAndConfiguration(TestCase):
                 dns_name=self.dns_name
             )
 
-            self.assertEqual(client.url, discovery_url)
             self.assertEqual(
-                client.redirect_uri,
-                "{discovery_url}complete/edx-oidc/".format(discovery_url=discovery_url)
+                client.redirect_uris,
+                "{discovery_url}complete/edx-oauth2/".format(discovery_url=discovery_url)
             )
             self.assertEqual(
                 client.client_id,
                 "discovery-key-{site_name}".format(site_name=site_name)
-            )
-            self.assertEqual(
-                client.client_secret,
-                "discovery-secret"
-            )
-            self.assertEqual(
-                len(TrustedClient.objects.filter(client=client)),
-                1
             )
 
     def test_without_dns(self):
