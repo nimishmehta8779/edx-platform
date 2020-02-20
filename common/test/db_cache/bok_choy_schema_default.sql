@@ -420,7 +420,7 @@ CREATE TABLE `auth_permission` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
   CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2411 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2420 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `auth_registration`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2541,7 +2541,7 @@ CREATE TABLE `django_content_type` (
   `model` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
-) ENGINE=InnoDB AUTO_INCREMENT=801 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=804 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `django_migrations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2552,7 +2552,7 @@ CREATE TABLE `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=658 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=663 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `django_openid_auth_association`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2783,6 +2783,39 @@ CREATE TABLE `edx_when_userdate` (
   CONSTRAINT `edx_when_userdate_actor_id_cbef1cdc_fk_auth_user_id` FOREIGN KEY (`actor_id`) REFERENCES `auth_user` (`id`),
   CONSTRAINT `edx_when_userdate_content_date_id_35c5e2e2_fk_edx_when_` FOREIGN KEY (`content_date_id`) REFERENCES `edx_when_contentdate` (`id`),
   CONSTRAINT `edx_when_userdate_user_id_46e8cc36_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `edx_zoom_launchlog`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `edx_zoom_launchlog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `course_id` varchar(255) NOT NULL,
+  `location` varchar(255) NOT NULL,
+  `managed` tinyint(1) NOT NULL,
+  `first_access` datetime(6) NOT NULL,
+  `last_access` datetime(6) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `edx_zoom_launchlog_user_id_location_1a925a87_uniq` (`user_id`,`location`),
+  KEY `edx_zoom_launchlog_course_id_df466312` (`course_id`),
+  KEY `edx_zoom_launchlog_managed_426683ea` (`managed`),
+  KEY `edx_zoom_launchlog_first_access_f45fc5ee` (`first_access`),
+  KEY `edx_zoom_launchlog_last_access_5c5d612f` (`last_access`),
+  CONSTRAINT `edx_zoom_launchlog_user_id_fad15956_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `edx_zoom_lticredential`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `edx_zoom_lticredential` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `course_id` varchar(255) NOT NULL,
+  `key` varchar(255) NOT NULL,
+  `secret` varchar(255) NOT NULL,
+  `launch_url` varchar(1024) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `course_id` (`course_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `edxval_coursevideo`;
@@ -4064,6 +4097,24 @@ CREATE TABLE `lti_provider_outcomeservice` (
   CONSTRAINT `lti_provider_outcome_lti_consumer_id_eb82db58_fk_lti_provi` FOREIGN KEY (`lti_consumer_id`) REFERENCES `lti_provider_lticonsumer` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `lx_pathway_plugin_pathway`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `lx_pathway_plugin_pathway` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uuid` char(32) NOT NULL,
+  `draft_data` longtext NOT NULL,
+  `published_data` longtext NOT NULL,
+  `owner_group_id` int(11) DEFAULT NULL,
+  `owner_user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
+  KEY `lx_pathway_plugin_pa_owner_group_id_b20ab5de_fk_auth_grou` (`owner_group_id`),
+  KEY `lx_pathway_plugin_pathway_owner_user_id_bd987df6_fk_auth_user_id` (`owner_user_id`),
+  CONSTRAINT `lx_pathway_plugin_pa_owner_group_id_b20ab5de_fk_auth_grou` FOREIGN KEY (`owner_group_id`) REFERENCES `auth_group` (`id`),
+  CONSTRAINT `lx_pathway_plugin_pathway_owner_user_id_bd987df6_fk_auth_user_id` FOREIGN KEY (`owner_user_id`) REFERENCES `auth_user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `milestones_coursecontentmilestone`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -4631,7 +4682,7 @@ DROP TABLE IF EXISTS `problem_builder_answer`;
 CREATE TABLE `problem_builder_answer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
-  `student_id` varchar(32) NOT NULL,
+  `student_id` varchar(50) NOT NULL,
   `student_input` longtext NOT NULL,
   `created_on` datetime(6) NOT NULL,
   `modified_on` datetime(6) NOT NULL,
