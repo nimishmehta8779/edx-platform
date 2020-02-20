@@ -6,8 +6,6 @@
   .date-title {
     color: #414141;
     font-weight: 500;
-    margin-bottom: 8px;
-    padding-bottom: 8px;
     border-bottom: 0;
   }
 
@@ -17,9 +15,21 @@
     position: relative;
     padding-left: 18px;
     margin-left: 6px;
+    padding-bottom: 39px;
+
+    &:first-of-type {
+      margin-top: 24px;
+    }
 
     &:last-of-type {
-      border-left: transparent;
+      border-left: solid 1px transparent;
+    }
+    &.active {
+      padding-bottom: 43px;
+    }
+
+    &.next-is-active {
+      padding-bottom: 35px;
     }
   }
 
@@ -46,15 +56,9 @@
     top: -7px;
     flex: 100%;
     line-height: 1.25;
-    padding-bottom: 39px;
 
     &.active {
       top: -3px;
-      padding-bottom: 42px;
-    }
-
-    &.next-is-active {
-      padding-bottom: 35px;
     }
   }
 

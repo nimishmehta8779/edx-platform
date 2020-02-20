@@ -30,9 +30,9 @@ from openedx.core.djangolib.markup import HTML, Text
                     <% verified = hasattr(block, 'requires_full_access') and block.requires_full_access %>
                     <% is_assignment = isinstance(block, CourseAssignmentDate) %>
                     <% next_is_active = 'next-is-active' if next.date and (next.date.strftime(next.date_format) == next.current_time.strftime(next.date_format)) else '' %>
-                    <div class="timeline-item ${active}">
+                    <div class="timeline-item ${active} ${next_is_active}">
                         <div class="date-circle ${active}"></div>
-                        <div class="date-content ${active} ${next_is_active}">
+                        <div class="date-content ${active}">
                             <div class="timeline-date-content">
                                     % if block.date:
                                         <div class="timeline-date">
