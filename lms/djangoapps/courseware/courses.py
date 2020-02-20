@@ -453,9 +453,12 @@ def get_course_assignment_due_dates(course, user, request, num_return=None,
                         child_block = store.get_item(child_block_key)
                         # If group_access is set on the block, and the content gating is
                         # only full access, set the value on the CourseAssignmentDate object
-                        date_block.requires_full_access = (child_block.group_access and child_block.group_access.get(CONTENT_GATING_PARTITION_ID) == [
-                            settings.CONTENT_TYPE_GATE_GROUP_IDS['full_access']
-                        ])
+                        date_block.requires_full_access = (
+                                child_block.group_access and
+                                child_block.group_access.get(CONTENT_GATING_PARTITION_ID) == [
+                                    settings.CONTENT_TYPE_GATE_GROUP_IDS['full_access']
+                                ]
+                        )
 
                 block_url = None
                 now = datetime.now().replace(tzinfo=pytz.UTC)
