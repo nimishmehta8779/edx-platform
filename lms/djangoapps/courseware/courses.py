@@ -467,6 +467,9 @@ def get_course_assignment_due_dates(course, user, request, num_return=None,
 
 
 def _requires_full_access(user, block_key):
+    """
+    Returns a boolean if any child of the block_key specified has a group_access array consisting of just full_access
+    """
     store = modulestore()
     child_block_keys = course_blocks_api.get_course_blocks(user, block_key)
     requires_full_access = False
